@@ -1,3 +1,11 @@
 FROM node:20
 
-RUN yarn
+WORKDIR /app
+
+COPY ./portfolio/yarn.lock ./portfolio/package.json /app/
+RUN yarn install --frozen-lockfile
+
+COPY ./portfolio /app
+RUN yarn build
+
+CMD [ "yarn", "start" ]
