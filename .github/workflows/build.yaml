@@ -42,5 +42,5 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
 
-      - name: Build2
+      - name: Build
         run: yarn build
