@@ -35,7 +35,7 @@ jobs:
         run: yarn build
 
       - name: List files
-        run: ls -a
+        run: ls ${{ github.workspace }} -a
 
       - uses: actions/cache@v4
         with:
