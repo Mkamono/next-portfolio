@@ -33,6 +33,7 @@ jobs:
 
       - name: Build
         run: yarn build
+        run: ls -a
 
       - uses: actions/cache@v4
         with:
