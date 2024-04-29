@@ -1,0 +1,38 @@
+version: "3"
+
+tasks:
+  clean:
+    prompt: キャッシュを削除しますか？
+    cmds:
+      - yarn cache clean
+      - rm -rf portfolio/.next/**
+      - rm -rf portfolio/node_modules/**
+
+  install:
+    dir: portfolio
+    cmds:
+      - yarn install
+
+  build:
+    deps: [install]
+    dir: portfolio
+    cmds:
+      - yarn build
+    sources:
+      - ./app/**
+      - ./public/**
+      - ./*
+    generates:
+      - ./.next/**
+
+  start:
+    deps: [build]
+    dir: portfolio
+    cmds:
+      - node .next/standalone/server.js
+
+  dev:
+    deps: [install]
+    dir: portfolio
+    cmds:
+      - yarn dev

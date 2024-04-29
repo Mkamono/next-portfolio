@@ -11,6 +11,7 @@
         "dotenv",
         "gcloud",
         "gserviceaccount",
+        "taskfile",
         "taskfiles"
     ],
     // flagWords - list of words to be always considered incorrect
