@@ -26,7 +26,8 @@
         "codezombiech.gitignore",
         "ms-azuretools.vscode-docker",
         "task.vscode-task",
-        "IronGeek.vscode-env"
+        "IronGeek.vscode-env",
+        "hashicorp.terraform"
       ]
     }
   },
@@ -39,7 +40,15 @@
   ],
   "features": {
     "ghcr.io/dhoeric/features/google-cloud-cli:1": {},
-    "ghcr.io/eitsupi/devcontainer-features/go-task:1": {}
+    "ghcr.io/eitsupi/devcontainer-features/go-task:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/terraform:1": {
+      "installTFsec": true,
+      "installTerraformDocs": true,
+      "version": "latest",
+      "terragrunt": "latest"
+    }
   }
   // Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
   // "remoteUser": "devcontainer"
