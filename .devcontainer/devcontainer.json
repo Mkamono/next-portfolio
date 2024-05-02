@@ -46,8 +46,7 @@
     "ghcr.io/devcontainers/features/terraform:1": {
       "installTFsec": true,
       "installTerraformDocs": true,
-      "version": "latest",
-      "terragrunt": "latest"
+      "version": "latest"
     }
   }
   // Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
