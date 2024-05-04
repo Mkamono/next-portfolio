@@ -31,6 +31,16 @@ tasks:
           SECRET_NAME: "TERRAFORM_SERVICE_ACCOUNT"
           SECRET_VALUE: "{{.TERRAFORM_SERVICE_ACCOUNT}}" # taskfiles/gcloud.ymlのvarsに定義されている
 
+  delete_github_secret:
+    deps: [gcloud:login]
+    cmds:
+      - task: github:delete_secret
+        vars:
+          SECRET_NAME: "PROJECT_ID"
+      - task: github:delete_secret
+        vars:
+          SECRET_NAME: "TERRAFORM_SERVICE_ACCOUNT"
+
   init:
     prompt: プロジェクトを作成しますか？
     cmds:

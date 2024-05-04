@@ -19,3 +19,10 @@ tasks:
     deps: [login]
     cmds:
       - gh secret set {{.SECRET_NAME}} --body {{.SECRET_VALUE}}
+
+  delete_secret:
+    deps: [login]
+    cmds:
+      - gh secret delete {{.SECRET_NAME}}
+    status:
+      - test -z "$(gh secret list | grep {{.SECRET_NAME}})"
