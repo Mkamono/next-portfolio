@@ -35,4 +35,4 @@ tasks:
     deps: [install]
     dir: portfolio
     cmds:
-      - yarn dev
+      - yarn dev || echo "yarn dev finished"
