@@ -35,19 +35,15 @@
     "source=portfolio-node-modules,target=${containerWorkspaceFolder}/portfolio/node_modules,type=volume",
     "source=portfolio-yarn-cache,target=/root/usr/local/share/.cache/yarn,type=volume",
     "source=portfolio-next-cache,target=${containerWorkspaceFolder}/portfolio/.next,type=volume",
-    "source=portfolio-gcloud-credential,target=/root/.config,type=volume",
+    "source=portfolio-gcloud-credential,target=/root/.config/gcloud,type=volume",
+    "source=portfolio-github-credential,target=/root/.config/gh,type=volume",
     "source=portfolio-gcloud-boto-config,target=/root/.boto,type=volume"
   ],
   "features": {
     "ghcr.io/dhoeric/features/google-cloud-cli:1": {},
-    "ghcr.io/eitsupi/devcontainer-features/go-task:1": {
-      "version": "latest"
-    },
-    "ghcr.io/devcontainers/features/terraform:1": {
-      "installTFsec": true,
-      "installTerraformDocs": true,
-      "version": "latest"
-    }
+    "ghcr.io/eitsupi/devcontainer-features/go-task:1": {},
+    "ghcr.io/devcontainers/features/terraform:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   }
   // Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
   // "remoteUser": "devcontainer"
