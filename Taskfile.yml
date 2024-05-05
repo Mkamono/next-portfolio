@@ -12,6 +12,14 @@ tasks:
       - task: node:clean
       - task: gcloud:clean
       - task: github:clean
+  init:
+    prompt: プロジェクトを作成しますか？
+    cmds:
+      - task: node:install
+      - task: gcloud:enable_apis
+      - task: gcloud:create_terraform_service_account
+      - task: gcloud:current_env
+      - task: set_github_secret
 
   reset:
     deps: [node:clean, gcloud:reset]
@@ -40,12 +48,3 @@ tasks:
       - task: github:delete_secret
         vars:
           SECRET_NAME: "TERRAFORM_SERVICE_ACCOUNT"
-
-  init:
-    prompt: プロジェクトを作成しますか？
-    cmds:
-      - task: node:install
-      - task: gcloud:enable_apis
-      - task: gcloud:create_terraform_service_account
-      - task: gcloud:current_env
-      - task: set_github_secret
