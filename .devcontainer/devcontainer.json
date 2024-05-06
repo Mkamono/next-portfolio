@@ -27,7 +27,8 @@
         "ms-azuretools.vscode-docker",
         "task.vscode-task",
         "IronGeek.vscode-env",
-        "hashicorp.terraform"
+        "hashicorp.terraform",
+        "eamodio.gitlens"
       ]
     }
   },
