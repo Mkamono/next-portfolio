@@ -9,7 +9,7 @@ variable "region" {
   type = string
 }
 
-variable "terraform_sa" {
+variable "terraform_service_account" {
   type = string
 }
 

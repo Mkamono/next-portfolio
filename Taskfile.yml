@@ -36,9 +36,9 @@ tasks:
     cmds:
       - task: github:set_secret
         vars:
-          SECRET_NAME: "PROJECT_ID"
+          SECRET_NAME: "TF_VAR_project_id"
           SECRET_VALUE: "{{.PROJECT_ID}}" # taskfiles/gcloud.ymlのvarsに定義されている
       - task: github:set_secret
         vars:
-          SECRET_NAME: "TERRAFORM_SERVICE_ACCOUNT"
+          SECRET_NAME: "TF_VAR_terraform_service_account"
           SECRET_VALUE: "{{.TERRAFORM_SERVICE_ACCOUNT}}" # taskfiles/gcloud.ymlのvarsに定義されている
