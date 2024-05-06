@@ -1,0 +1,37 @@
+# Github CLI
+# https://cli.github.com/manual/
+
+version: "3"
+
+tasks:
+  login:
+    internal: true
+    cmds:
+      - gh auth login
+    status:
+      - test -n "$(gh auth status)"
+
+  clean:
+    prompt: Github CLIの情報を削除しますか？
+    cmds:
+      - rm -rf ~/.config/gh/**
+
+  reset:
+    deps: [login]
+    cmds:
+      - gh secret list | awk '{print $1}' | xargs -I {} gh secret delete {}
+      - task: clean
+
+  set_secret:
+    internal: true
+    deps: [login]
+    cmds:
+      - gh secret set {{.SECRET_NAME}} --body {{.SECRET_VALUE}}
+
+  delete_secret:
+    internal: true
+    deps: [login]
+    cmds:
+      - gh secret delete {{.SECRET_NAME}}
+    status:
+      - test -z "$(gh secret list | grep {{.SECRET_NAME}})"

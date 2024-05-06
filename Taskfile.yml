@@ -3,3 +3,42 @@ version: "3"
 includes:
   node: ./taskfiles/node.yml
   gcloud: ./taskfiles/gcloud.yml
+  github: ./taskfiles/github.yml
+
+tasks:
+  clean:
+    prompt: すべてのキャッシュデータを削除しますか？
+    cmds:
+      - task: node:clean
+      - task: gcloud:clean
+      - task: github:clean
+
+  init:
+    prompt: 新規プロジェクトを作成しますか？
+    cmds:
+      - task: node:install
+      - task: gcloud:enable_apis
+      - task: gcloud:create_terraform_service_account
+      - echo "google cloudの設定をしています。数秒お待ちください。"
+      - sleep 5
+      - task: set_github_secret
+
+  reset:
+    prompt: すべての設定をリセットしますか？google cloudのサービスアカウントは削除されます。
+    cmds:
+      - task: node:clean
+      - task: gcloud:reset
+      - task: github:reset
+
+  set_github_secret:
+    deps: [gcloud:create_terraform_service_account]
+    prompt: Githubのシークレットを設定しますか？現在のプロジェクトIDは{{.PROJECT_ID}}です。現在のサービスアカウントは{{.TERRAFORM_SERVICE_ACCOUNT}}です。
+    cmds:
+      - task: github:set_secret
+        vars:
+          SECRET_NAME: "TF_VAR_project_id"
+          SECRET_VALUE: "{{.PROJECT_ID}}" # taskfiles/gcloud.ymlのvarsに定義されている
+      - task: github:set_secret
+        vars:
+          SECRET_NAME: "TF_VAR_terraform_service_account"
+          SECRET_VALUE: "{{.TERRAFORM_SERVICE_ACCOUNT}}" # taskfiles/gcloud.ymlのvarsに定義されている
