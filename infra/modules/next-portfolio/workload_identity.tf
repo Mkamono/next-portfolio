@@ -30,7 +30,7 @@ resource "google_iam_workload_identity_pool_provider" "github_actions" {
 }
 
 data "google_service_account" "terraform_sa" {
-  account_id = vars.terraform_sa
+  account_id = vars.terraform_service_account
 }
 
 resource "google_service_account_iam_member" "terraform_sa_workload_identity_user" {
