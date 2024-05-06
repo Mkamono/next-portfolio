@@ -5,6 +5,7 @@ version: "3"
 
 tasks:
   login:
+    internal: true
     cmds:
       - gh auth login
     status:
@@ -15,12 +16,20 @@ tasks:
     cmds:
       - rm -rf ~/.config/gh/**
 
+  reset:
+    deps: [login]
+    cmds:
+      - gh secret list | awk '{print $1}' | xargs -I {} gh secret delete {}
+      - task: clean
+
   set_secret:
+    internal: true
     deps: [login]
     cmds:
       - gh secret set {{.SECRET_NAME}} --body {{.SECRET_VALUE}}
 
   delete_secret:
+    internal: true
     deps: [login]
     cmds:
       - gh secret delete {{.SECRET_NAME}}

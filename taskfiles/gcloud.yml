@@ -33,11 +33,14 @@ tasks:
       - task: clean
 
   login:
+    internal: true
     cmds:
       - gcloud init
+      - echo "Google Cloudの設定完了まで数秒お待ちください。"
+      - sleep 5
       - task: current_env
     status:
-      - test -n "{{.ACCOUNT}}"
+      - test -n "{{.PROJECT_ID}}"
 
   delete_terraform_service_account:
     deps: [login]
