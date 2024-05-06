@@ -12,23 +12,27 @@ tasks:
       - task: node:clean
       - task: gcloud:clean
       - task: github:clean
+
   init:
-    prompt: プロジェクトを作成しますか？
+    prompt: 新規プロジェクトを作成しますか？
     cmds:
       - task: node:install
       - task: gcloud:enable_apis
       - task: gcloud:create_terraform_service_account
-      - task: gcloud:current_env
+      - echo "google cloudの設定をしています。数秒お待ちください。"
+      - sleep 5
       - task: set_github_secret
 
   reset:
-    deps: [node:clean, gcloud:reset]
-    prompt: リセットしますか？google cloudのサービスアカウントは削除されます。
+    prompt: すべての設定をリセットしますか？google cloudのサービスアカウントは削除されます。
     cmds:
-      - echo "reset"
+      - task: node:clean
+      - task: gcloud:reset
+      - task: github:reset
 
   set_github_secret:
-    deps: [gcloud:login, gcloud:create_terraform_service_account]
+    deps: [gcloud:create_terraform_service_account]
+    prompt: Githubのシークレットを設定しますか？現在のプロジェクトIDは{{.PROJECT_ID}}です。現在のサービスアカウントは{{.TERRAFORM_SERVICE_ACCOUNT}}です。
     cmds:
       - task: github:set_secret
         vars:
@@ -38,13 +42,3 @@ tasks:
         vars:
           SECRET_NAME: "TERRAFORM_SERVICE_ACCOUNT"
           SECRET_VALUE: "{{.TERRAFORM_SERVICE_ACCOUNT}}" # taskfiles/gcloud.ymlのvarsに定義されている
-
-  delete_github_secret:
-    deps: [gcloud:login]
-    cmds:
-      - task: github:delete_secret
-        vars:
-          SECRET_NAME: "PROJECT_ID"
-      - task: github:delete_secret
-        vars:
-          SECRET_NAME: "TERRAFORM_SERVICE_ACCOUNT"
