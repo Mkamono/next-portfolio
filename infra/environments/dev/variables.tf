@@ -20,5 +20,5 @@ variable "workload_identity_pool_provider_id" {
 
 variable "tfc_service_account_id" {
   type        = string
-  description = "The name of the service account that will be created"
+  description = "The name of the service account that will be create"
 }
