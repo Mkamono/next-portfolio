@@ -8,8 +8,6 @@ vars:
     sh: gcloud auth list --format="value(account)" --filter=status:ACTIVE
   PROJECT_ID:
     sh: gcloud config get-value project
-  TERRAFORM_SERVICE_ACCOUNT:
-    sh: (gcloud iam service-accounts list --format="value(email)" --filter="displayName:{{.PROJECT_ID}} Service Account for Terraform") || echo ""
 
 tasks:
   current_env:
@@ -17,19 +15,16 @@ tasks:
     cmds:
       - echo "ACCOUNT = {{.ACCOUNT}}"
       - echo "PROJECT_ID = {{.PROJECT_ID}}"
-      - echo "TERRAFORM_SERVICE_ACCOUNT = {{.TERRAFORM_SERVICE_ACCOUNT}}"
 
   clean:
     prompt: gcloud CLIの情報を削除しますか？
     dir: /root
     cmds:
-      - task: delete_terraform_service_account
       - rm -rf .config/gcloud/**
       - rm -rf .boto/**
 
   reset:
     cmds:
-      - task: delete_terraform_service_account
       - task: clean
 
   login:
@@ -42,35 +37,13 @@ tasks:
     status:
       - test -n "{{.PROJECT_ID}}"
 
-  delete_terraform_service_account:
-    deps: [login]
-    cmds:
-      - gcloud iam service-accounts delete {{.TERRAFORM_SERVICE_ACCOUNT}} --quiet
-      - task: current_env
-    status:
-      - test -z "{{.TERRAFORM_SERVICE_ACCOUNT}}"
-
-  create_terraform_service_account:
-    deps: [login]
-    cmds:
-      - gcloud iam service-accounts create {{.PROJECT_ID}}-terraform-sa
-        --display-name "{{.PROJECT_ID}} Service Account for Terraform"
-        --quiet
-      - task: grant_terraform_service_account
-        vars:
-          TERRAFORM_SERVICE_ACCOUNT: "{{.PROJECT_ID}}-terraform-sa@{{.PROJECT_ID}}.iam.gserviceaccount.com"
-      - task: current_env
-    status:
-      - test -n "{{.TERRAFORM_SERVICE_ACCOUNT}}"
-
-  grant_terraform_service_account:
+  login-applications:
     internal: true
     cmds:
-      - gcloud projects add-iam-policy-binding {{.PROJECT_ID}}
-        --member serviceAccount:{{.TERRAFORM_SERVICE_ACCOUNT}}
-        --role "roles/viewer"
-    requires:
-      vars: [TERRAFORM_SERVICE_ACCOUNT]
+      - gcloud auth application-default login
+    status:
+      - test -n "{{.PROJECT_ID}}"
+      - gcloud auth application-default print-access-token
 
   enable_apis:
     deps: [login]

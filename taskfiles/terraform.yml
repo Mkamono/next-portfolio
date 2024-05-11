@@ -1,0 +1,28 @@
+version: "3"
+
+env:
+  TF_CLI_CONFIG_FILE: "/root/.terraform.d/credentials.tfrc.json"
+
+tasks:
+  login:
+    cmds:
+      - terraform login
+    status:
+      - test -n "{{.TF_CLI_CONFIG_FILE}}"
+
+  init:
+    deps: [login]
+    dir: infra/environments/dev
+    cmds:
+      - terraform init
+    status:
+      - test -d ".terraform"
+
+  create_oidc:
+    deps: [login]
+    internal: true
+    dir: infra/environments/dev
+    cmds:
+      - task: init
+      - terraform plan -var="gcp_project_id={{.PROJECT_ID}}" -var="tfc_organization_name={{.TFC_ORG_NAME}}" -var="workload_identity_pool_id={{.WORKLOAD_IDENTITY_POOL_ID}}" -var="workload_identity_pool_provider_id={{.WORKLOAD_IDENTITY_PROVIDER_ID}}" -var="tfc_service_account_id={{.TFC_SERVICE_ACCOUNT_ID}}"
+      - terraform apply -var="gcp_project_id={{.PROJECT_ID}}" -var="tfc_organization_name={{.TFC_ORG_NAME}}" -var="workload_identity_pool_id={{.WORKLOAD_IDENTITY_POOL_ID}}" -var="workload_identity_pool_provider_id={{.WORKLOAD_IDENTITY_PROVIDER_ID}}" -var="tfc_service_account_id={{.TFC_SERVICE_ACCOUNT_ID}}"

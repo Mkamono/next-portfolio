@@ -11,8 +11,11 @@
         "dotenv",
         "gcloud",
         "gserviceaccount",
+        "kamono",
+        "oidc",
         "taskfile",
-        "taskfiles"
+        "taskfiles",
+        "tfrc"
     ],
     // flagWords - list of words to be always considered incorrect
     // This is useful for offensive words and common spelling errors.
