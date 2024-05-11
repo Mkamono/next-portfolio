@@ -38,7 +38,8 @@
     "source=portfolio-next-cache,target=${containerWorkspaceFolder}/portfolio/.next,type=volume",
     "source=portfolio-gcloud-credential,target=/root/.config/gcloud,type=volume",
     "source=portfolio-github-credential,target=/root/.config/gh,type=volume",
-    "source=portfolio-gcloud-boto-config,target=/root/.boto,type=volume"
+    "source=portfolio-gcloud-boto-config,target=/root/.boto,type=volume",
+    "source=portfolio-terraform-config,target=/root/.terraform.d,type=volume"
   ],
   "features": {
     "ghcr.io/dhoeric/features/google-cloud-cli:1": {},
