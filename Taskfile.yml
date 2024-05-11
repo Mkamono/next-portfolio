@@ -1,44 +1,70 @@
 version: "3"
 
 includes:
-  node: ./taskfiles/node.yml
-  gcloud: ./taskfiles/gcloud.yml
-  github: ./taskfiles/github.yml
+  nd: ./taskfiles/node.yml
+  gc: ./taskfiles/gcloud.yml
+  gh: ./taskfiles/github.yml
+  tf: ./taskfiles/terraform.yml
+
+env:
+  TF_CLI_CONFIG_FILE: "/root/.terraform.d/credentials.tfrc.json"
+  TFC_ORG_NAME: "kamono-personal"
+  TFC_SERVICE_ACCOUNT_ID: "tfc-service-account"
+  WORKLOAD_IDENTITY_POOL_ID: "my-tfc-pool"
+  WORKLOAD_IDENTITY_PROVIDER_ID: "my-tfc-provider-id"
+
+vars:
+  ACCOUNT:
+    sh: gcloud auth list --format="value(account)" --filter=status:ACTIVE
+  PROJECT_ID:
+    sh: gcloud config get-value project
 
 tasks:
   clean:
     prompt: すべてのキャッシュデータを削除しますか？
     cmds:
-      - task: node:clean
-      - task: gcloud:clean
-      - task: github:clean
+      - task: nd:clean
+      - task: gc:clean
+      - task: gh:clean
 
   init:
     prompt: 新規プロジェクトを作成しますか？
     cmds:
-      - task: node:install
-      - task: gcloud:enable_apis
-      - task: gcloud:create_terraform_service_account
+      - task: nd:install
+      - task: gc:enable_apis
       - echo "google cloudの設定をしています。数秒お待ちください。"
       - sleep 5
-      - task: set_github_secret
+      - task: create_oidc
+      - task: set_gh_secret
 
   reset:
     prompt: すべての設定をリセットしますか？google cloudのサービスアカウントは削除されます。
     cmds:
-      - task: node:clean
-      - task: gcloud:reset
-      - task: github:reset
+      - task: nd:clean
+      - task: gc:reset
+      - task: gh:reset
 
-  set_github_secret:
-    deps: [gcloud:create_terraform_service_account]
-    prompt: Githubのシークレットを設定しますか？現在のプロジェクトIDは{{.PROJECT_ID}}です。現在のサービスアカウントは{{.TERRAFORM_SERVICE_ACCOUNT}}です。
+  set_gh_secret:
+    deps: [create_oidc]
     cmds:
-      - task: github:set_secret
+      - task: gh:set_secret
         vars:
-          SECRET_NAME: "TF_VAR_project_id"
-          SECRET_VALUE: "{{.PROJECT_ID}}" # taskfiles/gcloud.ymlのvarsに定義されている
-      - task: github:set_secret
+          SECRET_NAME: "WORKLOAD_IDENTITY_PROVIDER"
+          SECRET_VALUE: "{{.WORKLOAD_IDENTITY_PROVIDER_ID}}"
+      - task: gh:set_secret
         vars:
-          SECRET_NAME: "TF_VAR_terraform_service_account"
-          SECRET_VALUE: "{{.TERRAFORM_SERVICE_ACCOUNT}}" # taskfiles/gcloud.ymlのvarsに定義されている
+          SECRET_NAME: "SERVICE_ACCOUNT"
+          SECRET_VALUE: "{{.TFC_SERVICE_ACCOUNT_ID}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
+
+  create_oidc:
+    deps: [gc:login-applications]
+    cmds:
+      - task: tf:create_oidc
+        vars:
+          PROJECT_ID: "{{.PROJECT_ID}}"
+          TFC_ORG_NAME: "{{.TFC_ORG_NAME}}"
+          WORKLOAD_IDENTITY_POOL_ID: "{{.WORKLOAD_IDENTITY_POOL_ID}}"
+          WORKLOAD_IDENTITY_PROVIDER_ID: "{{.WORKLOAD_IDENTITY_PROVIDER_ID}}"
+          TFC_SERVICE_ACCOUNT_ID: "{{.TFC_SERVICE_ACCOUNT_ID}}"
+    status:
+      - gcloud iam service-accounts list --format="value(email)" --filter="displayName:Terraform"
