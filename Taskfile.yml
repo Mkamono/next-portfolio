@@ -55,6 +55,26 @@ tasks:
         vars:
           SECRET_NAME: "SERVICE_ACCOUNT"
           SECRET_VALUE: "{{.TFC_SERVICE_ACCOUNT_ID}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
+      - task: gh:set_secret
+        vars:
+          SECRET_NAME: "TF_VAR_tfc_organization_name"
+          SECRET_VALUE: "{{.TFC_ORG_NAME}}"
+      - task: gh:set_secret
+        vars:
+          SECRET_NAME: "TF_VAR_project_id"
+          SECRET_VALUE: "{{.PROJECT_ID}}"
+      - task: gh:set_secret
+        vars:
+          SECRET_NAME: "TF_VAR_workload_identity_pool_id"
+          SECRET_VALUE: "{{.WORKLOAD_IDENTITY_POOL_ID}}"
+      - task: gh:set_secret
+        vars:
+          SECRET_NAME: "TF_VAR_workload_identity_provider_id"
+          SECRET_VALUE: "{{.WORKLOAD_IDENTITY_PROVIDER_ID}}"
+      - task: gh:set_secret
+        vars:
+          SECRET_NAME: "TF_VAR_tfc_service_account_id"
+          SECRET_VALUE: "{{.TFC_SERVICE_ACCOUNT_ID}}"
 
   create_oidc:
     deps: [gc:login-applications]
