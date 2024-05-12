@@ -10,15 +10,18 @@ variable "gcp_project_id" {
 
 variable "workload_identity_pool_id" {
   type        = string
+  default     = "my-tfc-pool"
   description = "The ID of the workload identity pool."
 }
 
 variable "workload_identity_pool_provider_id" {
   type        = string
+  default     = "my-tfc-provider-id"
   description = "The ID of the workload identity pool provider."
 }
 
 variable "tfc_service_account_id" {
   type        = string
+  default     = "tfc-service-account"
   description = "The name of the service account that will be created"
 }
