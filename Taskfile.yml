@@ -10,14 +10,18 @@ env:
   TF_CLI_CONFIG_FILE: "/root/.terraform.d/credentials.tfrc.json"
   TFC_ORG_NAME: "kamono-personal"
   TFC_SERVICE_ACCOUNT_ID: "tfc-service-account"
-  WORKLOAD_IDENTITY_POOL_ID: "my-tfc-pool"
-  WORKLOAD_IDENTITY_PROVIDER_ID: "my-tfc-provider-id"
+  WORKLOAD_IDENTITY_POOL_ID: "kamono-portfolio-tfc-pool"
+  WORKLOAD_IDENTITY_PROVIDER_ID: "kamono-portfolio-tfc-provider-id"
 
 vars:
   ACCOUNT:
     sh: gcloud auth list --format="value(account)" --filter=status:ACTIVE
   PROJECT_ID:
     sh: gcloud config get-value project
+  WORKLOAD_IDENTITY_POOL_FULL_ID:
+    sh: (gcloud iam workload-identity-pools list --location="global" --format="value(name)") || echo ""
+  WORKLOAD_IDENTITY_PROVIDER_FULL_ID:
+    sh: (gcloud iam workload-identity-pools providers list --location="global" --workload-identity-pool="{{.WORKLOAD_IDENTITY_POOL_FULL_ID}}" --format="value(name)") || echo ""
 
 tasks:
   clean:
@@ -30,7 +34,7 @@ tasks:
   init:
     prompt: 新規プロジェクトを作成しますか？
     cmds:
-      - task: nd:install
+      # - task: nd:install
       - task: gc:enable_apis
       - echo "google cloudの設定をしています。数秒お待ちください。"
       - sleep 5
@@ -57,7 +61,7 @@ tasks:
           SECRET_VALUE: "{{.TFC_SERVICE_ACCOUNT_ID}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
 
   create_oidc:
-    deps: [gc:login-applications]
+    deps: [gc:login, gc:login-applications]
     cmds:
       - task: tf:create_oidc
         vars:
@@ -66,5 +70,3 @@ tasks:
           WORKLOAD_IDENTITY_POOL_ID: "{{.WORKLOAD_IDENTITY_POOL_ID}}"
           WORKLOAD_IDENTITY_PROVIDER_ID: "{{.WORKLOAD_IDENTITY_PROVIDER_ID}}"
           TFC_SERVICE_ACCOUNT_ID: "{{.TFC_SERVICE_ACCOUNT_ID}}"
-    status:
-      - gcloud iam service-accounts list --format="value(email)" --filter="displayName:Terraform"

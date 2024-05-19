@@ -2,9 +2,11 @@
 # Manual edits may be lost in future updates.
 
 provider "registry.terraform.io/hashicorp/google" {
-  version = "5.28.0"
+  version     = "5.28.0"
+  constraints = "5.28.0"
   hashes = [
     "h1:SDulaRuZPQeHs5MZHs4oGhstoqeaTZxN4nprxx2rWa8=",
+    "h1:bZDLXCLRyFQYTySa+H6gwFEeHOiCh/9YKOKI+Wm1VEo=",
     "zh:00fb6916789d56c8801f95624fd30aca05f47918e6fab5c05fab7214cdecfc65",
     "zh:204cc06787b8c55d2db744d020edf98bfdf294ed0a5d0fdc272afc0a9568a102",
     "zh:3ccc7337801b6ebc8362a3cf4ae8eafacd235ee2389c84a58a4a7a6878159687",
@@ -23,6 +25,7 @@ provider "registry.terraform.io/hashicorp/google" {
 provider "registry.terraform.io/hashicorp/google-beta" {
   version = "5.28.0"
   hashes = [
+    "h1:AakwLx3qzcM6ze+b734Di0piLw/Bof8mkJeYHxGhRQM=",
     "h1:QgPoqVrzhueqvDedrc0KzlMzJwfL1SjvT9Ah5/+OYYI=",
     "zh:2cfb876235f0fbad55ef38389ab61daa3bee0b98d63b7131f4809775e2f4f824",
     "zh:5bd207c00b53200fc6046ac61bafd96fc2fa36c0fe796a261c3958921238121d",
@@ -43,6 +46,7 @@ provider "registry.terraform.io/hashicorp/tfe" {
   version = "0.55.0"
   hashes = [
     "h1:+ggypk3/tYLr0Ti8cd0MwqvF/0kP3rrSYB1L4wZIo6o=",
+    "h1:3ODVrfH5Iyr7oeHlGT6Lkn2Ozsz0E+p+qla0xRE8b0k=",
     "zh:57e9a87066dc12f1ce6239a9fc1c7f8f0827d6a7abb363b713a185d5c30314e8",
     "zh:736e6941645087d91b48bbbc90c8bb617b4687e82a0128775354a4b837c9e9a5",
     "zh:74f04adcfb9a0af2c9efc860261d424cd9737f81d28e86b55f8e38ca04d7471f",
